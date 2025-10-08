@@ -4,16 +4,38 @@ const fs = require('fs');
 const { UPLOAD_PATH, MAX_FILE_SIZE } = require('../config/env');
 
 // Set storage engine
+// const storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     let folder = path.join(UPLOAD_PATH, '/');
+//     if (file.fieldname === 'image') {
+//       folder += 'images/';
+//     } else if (file.fieldname === 'model') {
+//       folder += 'models/';
+//     }
+//     cb(null, folder);
+//   },
+//   filename: function (req, file, cb) {
+//     cb(null, `${Date.now()}_${file.originalname}`);
+//   },
+// });
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    let folder = path.join(UPLOAD_PATH, '/');
+    let folder = path.join(__dirname, '..', 'uploads');
+
     if (file.fieldname === 'image') {
-      folder += 'images/';
+      folder = path.join(folder, 'images', req.user.restaurantId.toString());
     } else if (file.fieldname === 'model') {
-      folder += 'models/';
+      folder = path.join(folder, 'models', req.user.restaurantId.toString());
     }
+
+    if (!fs.existsSync(folder)) {
+      fs.mkdirSync(folder, { recursive: true });
+    }
+
     cb(null, folder);
   },
+
   filename: function (req, file, cb) {
     cb(null, `${Date.now()}_${file.originalname}`);
   },
@@ -116,6 +138,7 @@ exports.uploadImage = (req, res) => {
     }
 
     // Construct the file URL
+    // const fileUrl = `${req.protocol}://${req.get('host')}/api/upload/images/${req.user.restaurantId}/${req.file.filename}`;
     const fileUrl = `${req.protocol}://${req.get('host')}/api/upload/images/${req.user.restaurantId}/${req.file.filename}`;
 
     res.json({
