@@ -32,8 +32,7 @@ exports.getDishes = async (req, res) => {
 
 exports.createDish = async (req, res) => {
   try {
-    const { restaurantId, name, price, category, description, image, model3dglb, model3dusdz, tags, enableModel } = req.body;
-
+    const { restaurantId, name, price, category, description, image, model3dglb, model3dusdz, tags, enableModels } = req.body;
     // Debug info
     const debugInfo = {
       incomingRestaurantId: restaurantId,
@@ -67,7 +66,7 @@ exports.createDish = async (req, res) => {
       model3dglb,
       model3dusdz,
       tags,
-      enableModel
+      enableModels
     });
 
     return res.status(201).json({
