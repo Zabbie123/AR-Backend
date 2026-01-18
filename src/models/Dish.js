@@ -16,9 +16,9 @@ const dishSchema = new mongoose.Schema({
     default: true
   },
   tags: [String],
-  enableModel: {
+  enableModels: {
     type: Boolean,
-    default: false
+    default: true
   },
   isVisible: { type: Boolean, default: true },
   createdAt: { type: Date, default: Date.now },
